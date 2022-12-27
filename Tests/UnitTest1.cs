@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using Tests.ClassesToTest;
 using static Core.StringFormatter;
 
@@ -138,5 +139,42 @@ public class UnitTest1
 
         // Act & Assert
         Assert.Throws<FormatException>(() => Shared.Format(template, target));
+    }
+
+    [Fact]
+    public void MultiThread()
+    {
+        // Arrange
+        var threads = new List<Thread>();
+        var expected = new List<string>();
+        var unsortedActual = new ConcurrentBag<string>();
+        
+        // Append elements to thread and expected lists
+        for (var i = 0; i < 50; i++)
+        {
+            var data = Guid.NewGuid().ToString();
+            expected.Add("Test " + i + ": " + data);
+         
+            // Create new thread with formatting and adding to actual collection
+            var indexCopy = i; // Index must be immutable for usage in lambda
+            threads.Add(new Thread(() =>
+            {
+                var obj = new CountedStrings { Counter = indexCopy, Data = data };
+                var output = Shared.Format("Test {Counter}: {Data}", obj);
+                unsortedActual.Add(output);
+            }));
+        }
+
+        // Act
+        foreach (var thread in threads) thread.Start();
+        foreach (var thread in threads) thread.Join();
+        
+        // Sort to compare
+        var actual = unsortedActual.ToList();
+        actual.Sort();
+        expected.Sort();
+        
+        // Assert
+        Assert.Equal(expected, actual);
     }
 }

@@ -4,10 +4,10 @@ namespace Core;
 
 public class StringFormatter : IStringFormatter
 {
-    private ExpressionCache _cache = new ExpressionCache();
-    public static StringFormatter Shared = new StringFormatter();
+    private readonly ExpressionCache _cache = new();
+    public static readonly StringFormatter Shared = new();
 
-    private int GetLetterType(char letter)
+    private static int GetLetterType(char letter)
     {
         return letter switch
         {
@@ -29,7 +29,7 @@ public class StringFormatter : IStringFormatter
         { 0, 1, 0 }, // Escape close bracket is read
     };
 
-    private bool IsFinalState(int state) => state is 1 or 4;
+    private static bool IsFinalState(int state) => state is 1 or 4;
 
 
     public string Format(string template, object target)
