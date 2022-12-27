@@ -19,7 +19,7 @@ public class StringFormatter : IStringFormatter
 
     private const int InitialState = 1;
 
-    private static readonly int[,] Transtition =
+    private static readonly int[,] Transitions =
     {
         { 0, 0, 0 }, // Error state
         { 2, 5, 1 }, // Reading plain text
@@ -40,7 +40,7 @@ public class StringFormatter : IStringFormatter
         var state = InitialState;
         foreach (var letter in template)
         {
-            state = Transtition[state, GetLetterType(letter)];
+            state = Transitions[state, GetLetterType(letter)];
             switch (state)
             {
                 // Add letter(s) to output string.
@@ -69,8 +69,9 @@ public class StringFormatter : IStringFormatter
                     {
                         throw new FormatException("Could not obtain value of member '" + memberName + "'");
                     }
+
                     break;
-                
+
                 // Skip.
                 case 2:
                 case 5:
