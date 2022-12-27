@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Linq.Expressions;
 
-namespace StringFormatter.Core;
+namespace Core;
 
 internal class ExpressionCache
 {

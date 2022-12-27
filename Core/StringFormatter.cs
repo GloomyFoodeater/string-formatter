@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace StringFormatter.Core;
+namespace Core;
 
 public class StringFormatter : IStringFormatter
 {

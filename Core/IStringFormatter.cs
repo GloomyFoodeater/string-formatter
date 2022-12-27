@@ -1,4 +1,4 @@
-﻿namespace StringFormatter.Core;
+﻿namespace Core;
 
 public interface IStringFormatter
 {
