@@ -22,13 +22,14 @@ public class StringFormatter : IStringFormatter
     private static readonly int[,] Transtition =
     {
         { 0, 0, 0 }, // Error state
-        { 2, 4, 1 }, // Reading plain text
+        { 2, 5, 1 }, // Reading plain text
         { 1, 0, 3 }, // First open bracket is read
-        { 0, 1, 3 }, // Reading field or property 
-        { 0, 1, 0 }, // First close bracket is read
+        { 0, 4, 3 }, // Reading field or property 
+        { 2, 5, 1 }, // Finish reading field or property
+        { 0, 1, 0 }, // Escape close bracket is read
     };
 
-    private bool IsFinalState(int state) => state == 1;
+    private bool IsFinalState(int state) => state is 1 or 4;
 
 
     public string Format(string template, object target)
@@ -44,23 +45,6 @@ public class StringFormatter : IStringFormatter
             {
                 // Add letter(s) to output string.
                 case 1:
-                    if (memberName.Length > 0)
-                    {
-                        try
-                        {
-                            var memberValue = _cache.GetString(memberName.ToString(), target);
-                            output.Append(memberValue);
-                            memberName.Clear();
-                        }
-                        catch (ArgumentException e)
-                        {
-                            throw new FormatException(e.Message);
-                        }
-                        catch (Exception)
-                        {
-                            throw new FormatException("Could not obtain value of member '" + memberName + "'");
-                        }
-                    }
                     output.Append(letter);
                     break;
 
@@ -69,9 +53,27 @@ public class StringFormatter : IStringFormatter
                     memberName.Append(letter);
                     break;
 
+                // Add member value to output string.
+                case 4:
+                    try
+                    {
+                        var memberValue = _cache.GetString(memberName.ToString(), target);
+                        output.Append(memberValue);
+                        memberName.Clear();
+                    }
+                    catch (ArgumentException e)
+                    {
+                        throw new FormatException(e.Message);
+                    }
+                    catch (Exception)
+                    {
+                        throw new FormatException("Could not obtain value of member '" + memberName + "'");
+                    }
+                    break;
+                
                 // Skip.
                 case 2:
-                case 4:
+                case 5:
                     break;
                 default:
                     throw new FormatException("Error state reached while formatting");
