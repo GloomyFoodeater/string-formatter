@@ -65,10 +65,6 @@ public class StringFormatter : IStringFormatter
                     {
                         throw new FormatException(e.Message);
                     }
-                    catch (Exception)
-                    {
-                        throw new FormatException("Could not obtain value of member '" + memberName + "'");
-                    }
 
                     break;
 

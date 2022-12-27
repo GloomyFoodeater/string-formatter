@@ -18,7 +18,7 @@ internal class ExpressionCache
 
         // Validate request
         if (hasNoDataMember)
-            throw new ArgumentException("Type '" + type.Name + "' does not contain property or field '" +
+            throw new ArgumentException("Type '" + type.Name + "' does not contain public property or field '" +
                                         dataMemberName + "'");
         
         var key = type.Name + "." + dataMemberName;
