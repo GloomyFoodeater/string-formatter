@@ -4,19 +4,8 @@ namespace Core;
 
 public class StringFormatter : IStringFormatter
 {
+    public static readonly StringFormatter Formatter = new();
     private readonly ExpressionCache _cache = new();
-    public static readonly StringFormatter Shared = new();
-
-    private static int GetLetterType(char letter)
-    {
-        return letter switch
-        {
-            '{' => 0,
-            '}' => 1,
-            _ => 2
-        };
-    }
-
     private const int InitialState = 1;
 
     private static readonly int[,] Transitions =
@@ -29,14 +18,18 @@ public class StringFormatter : IStringFormatter
         { 0, 1, 0 }, // Escape close bracket is read
     };
 
-    private static bool IsFinalState(int state) => state is 1 or 4;
-
+    // Singleton.
+    private StringFormatter()
+    {
+    }
 
     public string Format(string template, object target)
     {
-        var output = new StringBuilder(template.Length);
-        var memberName = new StringBuilder(20);
+        // Reserve buffers.
+        var output = new StringBuilder(template.Length); // Output string is usually superset of template
+        var memberName = new StringBuilder(20); // Identifiers are usually not that long
 
+        // Process string with DFA.
         var state = InitialState;
         foreach (var letter in template)
         {
@@ -82,4 +75,16 @@ public class StringFormatter : IStringFormatter
 
         return output.ToString();
     }
+
+    private static int GetLetterType(char letter)
+    {
+        return letter switch
+        {
+            '{' => 0,
+            '}' => 1,
+            _ => 2
+        };
+    }
+
+    private static bool IsFinalState(int state) => state is 1 or 4;
 }

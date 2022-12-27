@@ -14,7 +14,7 @@ public class UnitTest1
         var target = new { };
 
         // Act & Assert
-        Assert.Throws<FormatException>(() => Shared.Format(template, target));
+        Assert.Throws<FormatException>(() => Formatter.Format(template, target));
     }
 
     [Fact]
@@ -25,7 +25,7 @@ public class UnitTest1
         var target = new { SomeName = "" };
 
         // Act & Assert
-        Assert.Throws<FormatException>(() => Shared.Format(template, target));
+        Assert.Throws<FormatException>(() => Formatter.Format(template, target));
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class UnitTest1
         var target = new Machine();
 
         // Act & Assert
-        Assert.Throws<FormatException>(() => Shared.Format(template, target));
+        Assert.Throws<FormatException>(() => Formatter.Format(template, target));
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public class UnitTest1
         var target = new { };
 
         // Act & Assert
-        Assert.Throws<FormatException>(() => Shared.Format(template, target));
+        Assert.Throws<FormatException>(() => Formatter.Format(template, target));
     }
 
     [Fact]
@@ -58,7 +58,7 @@ public class UnitTest1
         var target = new Person();
 
         // Act & Assert
-        Assert.Throws<NullReferenceException>(() => Shared.Format(template, target));
+        Assert.Throws<NullReferenceException>(() => Formatter.Format(template, target));
     }
 
     [Fact]
@@ -74,7 +74,7 @@ public class UnitTest1
         };
 
         // Act
-        var actual = Shared.Format(template, target);
+        var actual = Formatter.Format(template, target);
 
         // Assert
         Assert.Equal(expected, actual);
@@ -90,7 +90,7 @@ public class UnitTest1
         var target = new Wrapper(2);
 
         // Act
-        var actual = Shared.Format(template, target);
+        var actual = Formatter.Format(template, target);
 
         // Assert
         Assert.Equal(expected, actual);
@@ -105,7 +105,7 @@ public class UnitTest1
         var target = new Person { LastName = "Doe" };
 
         // Act
-        var actual = Shared.Format(template, target);
+        var actual = Formatter.Format(template, target);
 
         // Assert
         Assert.Equal(expected, actual);
@@ -124,7 +124,7 @@ public class UnitTest1
         };
 
         // Act
-        var actual = Shared.Format(template, target);
+        var actual = Formatter.Format(template, target);
 
         // Assert
         Assert.Equal(expected, actual);
@@ -138,7 +138,7 @@ public class UnitTest1
         var target = new { };
 
         // Act & Assert
-        Assert.Throws<FormatException>(() => Shared.Format(template, target));
+        Assert.Throws<FormatException>(() => Formatter.Format(template, target));
     }
 
     [Fact]
@@ -160,7 +160,7 @@ public class UnitTest1
             threads.Add(new Thread(() =>
             {
                 var obj = new CountedStrings { Counter = indexCopy, Data = data };
-                var output = Shared.Format("Test {Counter}: {Data}", obj);
+                var output = Formatter.Format("Test {Counter}: {Data}", obj);
                 unsortedActual.Add(output);
             }));
         }

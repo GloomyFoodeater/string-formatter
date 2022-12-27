@@ -9,32 +9,34 @@ internal class ExpressionCache
 
     public string GetString(string dataMemberName, object target)
     {
-        // Obtain target metadata
+        // Obtain target metadata.
         var type = target.GetType();
         var fields = type.GetFields();
         var properties = type.GetProperties();
+
+        // Validate request.
         var hasNoDataMember = fields.All(field => field.Name != dataMemberName) &&
                               properties.All(prop => prop.Name != dataMemberName);
-
-        // Validate request
         if (hasNoDataMember)
             throw new ArgumentException("Type '" + type.Name + "' does not contain public property or field '" +
                                         dataMemberName + "'");
-        
+
         var key = type.Name + "." + dataMemberName;
-        
-        // Get existing delegate
+
+        // Cache hit.
+        // Get existing delegate.
         if (_dictionary.TryGetValue(key, out var result)) return result(target);
-        
-        // Compile delegate to access object data member with reflection  
+
+        // Cache miss.
+        // Compile delegate to access object data member with reflection.  
         var parameter = Expression.Parameter(typeof(object), "obj");
         var propertyOrField = Expression.PropertyOrField(Expression.TypeAs(parameter, type), dataMemberName);
         var call = Expression.Call(propertyOrField, "ToString", null, null);
         var lambda = Expression.Lambda<Func<object, string>>(call, parameter);
-        result = lambda.Compile();
-        
-        // Dictionary can be appended during delegate compilation in another thread
-        _dictionary.GetOrAdd(key, result);
+        result = lambda.Compile(); // (obj)=>obj.<dataMemberName>.ToString()
+
+        // Dictionary can be appended during delegate compilation in another thread.
+        result = _dictionary.GetOrAdd(key, result);
 
         return result(target);
     }

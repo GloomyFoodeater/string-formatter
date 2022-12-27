@@ -12,12 +12,12 @@ public class Wrapper
 
     public Wrapper(int deepness)
     {
-        for (int i = 0; i < deepness; i++) Child = new Wrapper(deepness - 1);
+        for (var i = 0; i < deepness; i++) Child = new Wrapper(deepness - 1);
     }
 
     public override string ToString()
     {
         // Child is outside of template since it can be null
-        return Shared.Format("Wrapper\n{Machine}\n{Person}\n", this) + Child;
+        return Formatter.Format("Wrapper\n{Machine}\n{Person}\n", this) + Child;
     }
 }

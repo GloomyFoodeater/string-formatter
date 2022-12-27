@@ -7,5 +7,5 @@ public class Person
     public string LastName;
     public string FirstName;
 
-    public override string ToString() => Shared.Format("Person: {FirstName} {LastName}", this);
+    public override string ToString() => Formatter.Format("Person: {FirstName} {LastName}", this);
 }
