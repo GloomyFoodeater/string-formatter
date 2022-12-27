@@ -4,7 +4,7 @@ using static Core.StringFormatter;
 
 namespace Tests;
 
-public class UnitTest1
+public class StringFormatterTests
 {
     [Fact]
     public void EmptyMember()
